@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebChat - Customize and Deploy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #fff;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f5f5f5;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .tab.active {
+            background: #fff;
+            border-bottom: 3px solid #667eea;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            padding: 30px;
+        }
+        
+        .content {
+            display: none;
+        }
+        
+        .content.active {
+            display: block;
+        }
+        
+        .customization-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .option {
+            margin-bottom: 15px;
+        }
+        
+        .option label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .option input, .option select, .option textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .color-picker {
+            display: flex;
+            align-items: center;
+        }
+        
+        .color-picker input {
+            margin-right: 10px;
+        }
+        
+        .color-preview {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        
+        .preview-container {
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .preview-box {
+            width: 100%;
+            height: 200px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s;
+            display: inline-block;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #5a6fd5;
+        }
+        
+        .btn-secondary {
+            background: #764ba2;
+        }
+        
+        .btn-secondary:hover {
+            background: #6a4190;
+        }
+        
+        .step {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-right: 10px;
+        }
+        
+        .step h3 {
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .platform-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .platform {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .platform:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .platform i {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        .instructions {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .instructions ol {
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .customization-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .platform-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>WebChat Customization Center</h1>
+            <p>Customize, download, and deploy your own chat application</p>
+        </header>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="customize">Customize</div>
+            <div class="tab" data-tab="download">Download</div>
+            <div class="tab" data-tab="deploy">Deploy</div>
+            <div class="tab" data-tab="use">How to Use</div>
+        </div>
+        
+        <div class="tab-content">
+            <!-- Customization Tab -->
+            <div class="content active" id="customize">
+                <h2>Customize Your WebChat</h2>
+                <p>Personalize your chat application with the options below.</p>
+                
+                <div class="customization-options">
+                    <div class="option">
+                        <label for="appName">Application Name</label>
+                        <input type="text" id="appName" value="WebChat" placeholder="Enter your app name">
+                    </div>
+                    
+                    <div class="option">
+                        <label for="primaryColor">Primary Color</label>
+                        <div class="color-picker">
+                            <input type="color" id="primaryColor" value="#667eea">
+                            <div class="color-preview" id="primaryPreview" style="background: #667eea;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="option">
+                        <label for="secondaryColor">Secondary Color</label>
+                        <div class="color-picker">
+                            <input type="color" id="secondaryColor" value="#764ba2">
+                            <div class="color-preview" id="secondaryPreview" style="background: #764ba2;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="option">
+                        <label for="theme">Theme</label>
+                        <select id="theme">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                            <option value="auto">Auto (System)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option">
+                        <label for="font">Font</label>
+                        <select id="font">
+                            <option value="Segoe UI">Segoe UI</option>
+                            <option value="Roboto">Roboto</option>
+                            <option value="Open Sans">Open Sans</option>
+                            <option value="Poppins">Poppins</option>
+                            <option value="Montserrat">Montserrat</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option">
+                        <label for="welcomeMessage">Welcome Message</label>
+                        <textarea id="welcomeMessage" rows="3">Welcome to our chat! Start conversing with people around the world.</textarea>
+                    </div>
+                </div>
+                
+                <div class="preview-container">
+                    <h3>Live Preview</h3>
+                    <div class="preview-box">
+                        <div id="appPreview">
+                            <div style="text-align: center; padding: 20px;">
+                                <div style="font-size: 2rem; color: #667eea; margin-bottom: 15px;">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <h2 id="previewAppName">WebChat</h2>
+                                <p id="previewWelcome">Welcome to our chat! Start conversing with people around the world.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="btn" id="saveBtn">Save Changes</button>
+                <button class="btn btn-secondary" id="resetBtn">Reset to Default</button>
+            </div>
+            
+            <!-- Download Tab -->
+            <div class="content" id="download">
+                <h2>Download Your Application</h2>
+                <p>Download your customized chat application as a single HTML file.</p>
+                
+                <div class="step">
+                    <h3><span class="step-number">1</span>Review your customization</h3>
+                    <p>Make sure you've customized your chat application to your liking in the previous tab.</p>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">2</span>Download your files</h3>
+                    <p>Click the button below to download your customized chat application.</p>
+                    <button class="btn" id="downloadBtn">Download WebChat</button>
+                    <p style="margin-top: 15px; font-size: 0.9rem; color: #666;">The download will include a complete HTML file with all necessary code.</p>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">3</span>What's included</h3>
+                    <p>Your download will contain:</p>
+                    <ul style="margin: 15px 0 15px 20px;">
+                        <li>Complete HTML file with all HTML, CSS, and JavaScript</li>
+                        <li>No external dependencies - works offline</li>
+                        <li>All your customization settings applied</li>
+                        <li>Instructions for deployment</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Deploy Tab -->
+            <div class="content" id="deploy">
+                <h2>Deploy Your Application</h2>
+                <p>Make your chat application accessible to everyone around the world.</p>
+                
+                <div class="step">
+                    <h3><span class="step-number">1</span>Choose a hosting platform</h3>
+                    <p>Select where you want to host your chat application:</p>
+                    
+                    <div class="platform-options">
+                        <div class="platform">
+                            <i class="fab fa-github"></i>
+                            <h4>GitHub Pages</h4>
+                            <p>Free hosting for static sites</p>
+                        </div>
+                        
+                        <div class="platform">
+                            <i class="fab fa-netlify"></i>
+                            <h4>Netlify</h4>
+                            <p>Free plan with continuous deployment</p>
+                        </div>
+                        
+                        <div class="platform">
+                            <i class="fab fa-google"></i>
+                            <h4>Firebase Hosting</h4>
+                            <p>Google's hosting solution</p>
+                        </div>
+                        
+                        <div class="platform">
+                            <i class="fas fa-server"></i>
+                            <h4>Traditional Web Hosting</h4>
+                            <p>Any standard web hosting service</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">2</span>Deployment Instructions</h3>
+                    
+                    <div class="instructions">
+                        <h4>For GitHub Pages:</h4>
+                        <ol>
+                            <li>Create a GitHub account if you don't have one</li>
+                            <li>Create a new repository</li>
+                            <li>Upload your downloaded HTML file (rename it to index.html)</li>
+                            <li>Go to repository Settings → Pages</li>
+                            <li>Select "main" branch and click Save</li>
+                            <li>Your site will be published at https://username.github.io/repository-name</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h4>For Netlify:</h4>
+                        <ol>
+                            <li>Create a Netlify account at netlify.com</li>
+                            <li>Drag and drop your HTML file to the deployment area</li>
+                            <li>Netlify will provide you with a unique URL</li>
+                            <li>Optionally, connect to GitHub for continuous deployment</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="instructions">
+                        <h4>For Traditional Web Hosting:</h4>
+                        <ol>
+                            <li>Purchase a web hosting plan and domain name</li>
+                            <li>Access your server via FTP or file manager</li>
+                            <li>Upload your HTML file to the public_html directory</li>
+                            <li>Rename the file to index.html if you want it as homepage</li>
+                            <li>Access your site via your domain name</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">3</span>Share Your Application</h3>
+                    <p>Once deployed, share your application URL with others so they can join your chat.</p>
+                    <p>You can share the link via email, social media, or any other method you prefer.</p>
+                </div>
+            </div>
+            
+            <!-- How to Use Tab -->
+            <div class="content" id="use">
+                <h2>How to Use Your WebChat</h2>
+                <p>Learn how to effectively use your chat application.</p>
+                
+                <div class="step">
+                    <h3><span class="step-number">1</span>Accessing the Chat</h3>
+                    <p>Once deployed, users can access your chat by visiting the URL where you've hosted it.</p>
+                    <p>No registration is required - users simply enter a username to start chatting.</p>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">2</span>Sending Messages</h3>
+                    <p>To send a text message:</p>
+                    <ol>
+                        <li>Type your message in the input field at the bottom</li>
+                        <li>Press Enter or click the send button</li>
+                    </ol>
+                    
+                    <p>To share media files:</p>
+                    <ol>
+                        <li>Click the appropriate media button (image, video, or file)</li>
+                        <li>Select the file from your device</li>
+                        <li>Add an optional text message</li>
+                        <li>Press Enter or click the send button</li>
+                    </ol>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">3</span>Managing Contacts</h3>
+                    <p>The application includes a contact list on the left side:</p>
+                    <ul>
+                        <li>See who's online</li>
+                        <li>View message previews</li>
+                        <li>Switch between different conversations</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <h3><span class="step-number">4</span>Technical Notes</h3>
+                    <p>This is a frontend-only application:</p>
+                    <ul>
+                        <li>Messages are not permanently stored</li>
+                        <li>All users in the same session can see messages</li>
+                        <li>For persistent messaging, consider adding a backend service</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show active content
+                    contents.forEach(c => c.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Color pickers
+            const primaryColor = document.getElementById('primaryColor');
+            const primaryPreview = document.getElementById('primaryPreview');
+            const secondaryColor = document.getElementById('secondaryColor');
+            const secondaryPreview = document.getElementById('secondaryPreview');
+            
+            primaryColor.addEventListener('input', function() {
+                primaryPreview.style.background = this.value;
+                updatePreview();
+            });
+            
+            secondaryColor.addEventListener('input', function() {
+                secondaryPreview.style.background = this.value;
+                updatePreview();
+            });
+            
+            // Other customization options
+            const appName = document.getElementById('appName');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const theme = document.getElementById('theme');
+            const font = document.getElementById('font');
+            
+            appName.addEventListener('input', updatePreview);
+            welcomeMessage.addEventListener('input', updatePreview);
+            theme.addEventListener('change', updatePreview);
+            font.addEventListener('change', updatePreview);
+            
+            function updatePreview() {
+                document.getElementById('previewAppName').textContent = appName.value;
+                document.getElementById('previewWelcome').textContent = welcomeMessage.value;
+                document.getElementById('appPreview').style.fontFamily = font.value;
+                
+                if (theme.value === 'dark') {
+                    document.getElementById('appPreview').style.background = '#333';
+                    document.getElementById('appPreview').style.color = '#fff';
+                } else {
+                    document.getElementById('appPreview').style.background = '#f9f9f9';
+                    document.getElementById('appPreview').style.color = '#333';
+                }
+            }
+            
+            // Save and reset buttons
+            document.getElementById('saveBtn').addEventListener('click', function() {
+                alert('Customization settings saved!');
+            });
+            
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                if (confirm('Reset all settings to default?')) {
+                    primaryColor.value = '#667eea';
+                    primaryPreview.style.background = '#667eea';
+                    secondaryColor.value = '#764ba2';
+                    secondaryPreview.style.background = '#764ba2';
+                    appName.value = 'WebChat';
+                    welcomeMessage.value = 'Welcome to our chat! Start conversing with people around the world.';
+                    theme.value = 'light';
+                    font.value = 'Segoe UI';
+                    updatePreview();
+                }
+            });
+            
+            // Download button
+            document.getElementById('downloadBtn').addEventListener('click', function() {
+                alert('In a real implementation, this would generate and download your customized chat application. For now, you can copy the code from the previous implementation and customize it manually.');
+            });
+        });
+    </script>
+</body>
+</html>
